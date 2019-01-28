@@ -1,0 +1,5 @@
+---
+  jenkins_slave_user: jenkins
+  jenkins_slave_group: jenkins
+  jenkins_slave_name: swm3.dev.init
+  jenkins_slave_home: /var/lib/jenkins

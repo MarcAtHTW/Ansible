@@ -1,0 +1,23 @@
+---
+
+- name: Install Docker on Jenkins-Docker-Slave and connect to Jenkins-Docker-Master via JNLP
+  hosts: jenkins-docker-slave 
+  become: true
+  tasks:
+
+  - name: Mount tmp with exec in se-linux
+    mount:
+      path: /tmp
+      fstype: xfs
+      state: mounted
+      src: /dev/mapper/centos7--LogVol-tmp
+      opts: rw,nosuid,nodev,exec,relatime,attr2,inode64,noquota
+
+  - include_role: 
+       name: geerlingguy.docker
+
+  - include_role:
+       name: geerlingguy.pip
+
+  - include_role:
+       name: docker-in-docker

@@ -1,0 +1,44 @@
+---
+   - name: Install git version 1.8.3.1
+     yum:
+       name: git-1.8.3.1
+       state: present
+   
+   - name: Install java openjdk version 1.8.0
+     yum:  
+       name: java-1.8.0-openjdk
+       state: present
+   
+   - name: Create persistence directory
+     file:
+       path: /opt/jenkins-docker-master-data/
+       state: directory
+       owner: 1000
+       group: 1000
+   
+   - name: clone persistence data
+     git:
+       repo: https://github.com/MarcAtHTW/MA-CI-CMGMT.git
+       dest: /opt/jenkins-docker-master-data/MA-CI-CMGMT
+       version: jenkins-docker-master-data
+
+   - name: Set permissions of checked out persistence data
+     file:
+       dest: /opt/jenkins-docker-master-data/MA-CI-CMGMT
+       owner: 1000
+       group: 1000
+       recurse: yes
+
+# ToDo: Public-Key auth for pushing persistence data to github
+
+   - name: Start Jenkins-Docker-Master-Container
+     docker_container:
+       name: jenkins-docker-master-ansible
+       image: msahib/jenkins-docker-master:v2
+       state: started
+       restart: no
+       ports:
+         - "8080:8080"
+         - "50000:50000"
+       volumes:
+       -  "/opt/jenkins-docker-master-data/MA-CI-CMGMT:/var/jenkins_home"

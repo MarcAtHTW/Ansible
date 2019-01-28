@@ -1,0 +1,35 @@
+---
+  - name: Change permission for Docker-Socket
+    file:
+      path: /var/run/docker.sock
+      mode: 0666
+
+  - name: Create directory .docker to save repo-credentials
+    file:
+      path: /opt/jenkins-docker-slave-data/.docker
+      state: directory
+      owner: 10000
+      group: 10000
+
+  - name: Copying credentials for used docker-registries
+    copy:
+      src: /opt/temp/docker-repo-credentials/docker-slave/config.json
+      dest: /opt/jenkins-docker-slave-data/.docker
+      owner: 10000
+      group: 10000
+
+  - name: Start Jenkins-Docker-Slave-Container
+    docker_container:
+      name: jenkins-docker-slave-ansible
+      image: msahib/jenkins-docker-slave:v1
+      state: started
+      restart: yes
+      volumes:
+       - "/var/run/docker.sock:/var/run/docker.sock"
+       - "/usr/bin/docker:/usr/bin/docker"
+       - "/opt/jenkins-docker-slave-data/.docker:/home/jenkins/.docker"
+      env:
+          JENKINS_URL: "http://swm3.dev.init:8080"
+          JENKINS_SECRET: "f03c837c33be63f3e5c4a867439fe5789bca69de2c6af20c9ef42c2f889e8f9a"
+          JENKINS_AGENT_NAME: "Jenkins-Docker-Slave"
+          JENKINS_AGENT_WORKDIR: "/home/jenkins/agent" 

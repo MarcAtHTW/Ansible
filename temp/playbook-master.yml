@@ -1,0 +1,11 @@
+---
+
+- name: Install Jenkins CI-Server
+  hosts: jenkins
+  become: true
+  tasks:
+  - include_role: 
+       name: ansible-role-jenkins
+
+  - include_role:
+       name: geerlingguy.docker

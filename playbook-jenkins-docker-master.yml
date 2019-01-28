@@ -1,0 +1,29 @@
+---
+
+- name: Install docker on Jenkins-Docker-Master and run Jenkins-Docker-Master container.
+  hosts: jenkins-docker-master 
+  become: true
+  tasks:
+
+  - name: Mount tmp with exec in se-linux
+    mount:
+      path: /tmp
+      fstype: xfs
+      state: mounted
+      src: /dev/mapper/centos7--LogVol-tmp
+      opts: rw,nosuid,nodev,exec,relatime,attr2,inode64,noquota
+
+  
+
+  - include_role: 
+       name: geerlingguy.docker
+
+  - include_role:
+       name: geerlingguy.pip
+
+  - include_role:
+       name: prerequisites-jenkins-docker-master
+
+#  - include_role:
+#       name: geerlingguy.pip
+

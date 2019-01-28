@@ -1,0 +1,25 @@
+---
+
+- name: Install Jenkins-Slave
+  hosts: slave 
+  become: true
+  tasks:
+  - include_role: 
+       name: geerlingguy.docker
+
+  - include_role:
+       name: geerlingguy.java
+
+  - name: Install git using yum
+    yum:
+      name: git
+      state: present
+    become: true
+   
+  - name: Mount tmp with exec in se-linux
+    mount:
+      path: /tmp
+      fstype: xfs
+      state: mounted
+      src: /dev/mapper/centos7--LogVol-tmp
+      opts: rw,nosuid,nodev,exec,relatime,attr2,inode64,noquota 

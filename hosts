@@ -1,0 +1,5 @@
+[jenkins-docker-master]
+swm3.dev.init ansible_connection=ssh ansible_ssh_user=root
+
+[jenkins-docker-slave]
+swm2.dev.init ansible_connection=ssh ansible_ssh_user=root
